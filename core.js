@@ -94,6 +94,7 @@ define(function(require, exports, module) {
     var container = document.getElementById("editor")
     var editor = new Editor(new Renderer(container, theme))
     env.editor = editor
+    exports.disableBuiltinCommands(env)
     env.aceCommands = Object.create(null)
     session.setUndoManager(new UndoManager())
     editor.setSession(session)
@@ -105,6 +106,11 @@ define(function(require, exports, module) {
     editor.renderer.setPadding(14)
     editor.session.setTabSize(2)
   })
+
+  exports.disableBuiltinCommands = function(env) {
+    var commands = env.editor.commands
+    ;[ 'find', 'gotoline' ].forEach(commands.removeCommand, commands)
+  }
 
   exports.onshutdown = meta({
     description: 'Hook that unregisters unplugged add-on commands & types'
